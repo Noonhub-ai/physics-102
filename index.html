@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#faf9ff">
+  <meta name="description" content="Physics 102 interactive laboratories developed by Dr. Najwa Al Bouzieh at Applied Science University. Explore electric fields and upcoming Gauss' law activities.">
+  <title>Physics 102 | Interactive Laboratories</title>
+  <style>
+    :root{color-scheme:light;--bg:#faf9ff;--ink:#26354a;--muted:#53647a;--lav:#eee9fc;--mint:#e8f7f1;--peach:#fff0e6;--border:#e3deed;--green:#287a77;--purple:#5e518e}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;color:var(--ink);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.6;background:radial-gradient(ellipse 70% 31% at 85% 0%,#e8e4ff 0,transparent 78%),radial-gradient(ellipse 60% 28% at 0% 48%,#e6f7f1 0,transparent 80%),var(--bg)}
+    .wrap{width:min(1100px,calc(100% - 36px));margin:auto}
+    header{border-bottom:1px solid #e8e1ee;background:#fffdfef0}
+    nav{display:flex;align-items:center;justify-content:space-between;gap:18px;min-height:74px}
+    .brand{font-weight:800;letter-spacing:.045em}.brand span{color:var(--green)}
+    .navlinks{display:flex;gap:20px;flex-wrap:wrap}.navlinks a{color:var(--muted);font-size:.92rem;text-decoration:none}.navlinks a:hover{color:var(--green)}
+    main{padding-bottom:72px}
+    .hero{padding:68px 0 57px;display:grid;grid-template-columns:1.17fr .83fr;align-items:center;gap:36px}
+    .eyebrow{color:var(--green);font-weight:800;text-transform:uppercase;letter-spacing:.17em;font-size:.78rem}
+    h1{font-size:clamp(2.55rem,6vw,4.85rem);line-height:1.08;letter-spacing:-.045em;margin:15px 0 22px}
+    h1 span{color:var(--green)}
+    .lead{color:var(--muted);font-size:1.09rem;max-width:640px;margin:0 0 25px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;min-height:47px;padding:11px 20px;text-decoration:none;background:#d8f2eb;border:1px solid #afd7ce;color:#184d4b;font-weight:800;border-radius:12px;transition:transform .18s,background .18s}
+    .btn:hover{transform:translateY(-2px);background:#c3ebe0}
+    a:focus-visible{outline:3px solid #9168ac;outline-offset:4px}
+    .art{min-height:290px;border:1px solid #ddd6ef;background:linear-gradient(135deg,#f1ecff,#e4f6f2 78%);box-shadow:0 14px 34px #362e5910;border-radius:24px;display:grid;place-items:center;padding:14px}
+    .art svg{width:min(95%,400px);height:auto}
+    .sectionhead{display:flex;justify-content:space-between;align-items:end;gap:18px;margin:5px 0 22px}
+    h2{font-size:clamp(1.55rem,3vw,2.1rem);line-height:1.2;margin:0}
+    .subtitle{color:var(--muted);margin:7px 0 0}
+    .pill{display:inline-block;background:#e8e2fa;color:#554878;padding:6px 12px;border-radius:999px;font-size:.79rem;font-weight:800;white-space:nowrap}
+    .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:19px}
+    .card{background:#fff;border:1px solid var(--border);border-radius:20px;box-shadow:0 6px 20px #3e47630a;padding:25px;display:flex;flex-direction:column;gap:13px;min-height:280px}
+    .card.live{background:linear-gradient(155deg,#f2faf7 0%,#fff 57%);border-color:#cbded9}
+    .icon{width:53px;height:53px;border-radius:15px;display:grid;place-items:center;background:var(--lav);font-size:1.65rem}
+    .status{font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.055em;color:#6a7283}
+    .live .status{color:#267773}
+    .card h3{font-size:1.25rem;line-height:1.25;margin:0}
+    .card p{font-size:.95rem;color:var(--muted);margin:0;flex:1}
+    .card .btn{align-self:flex-start}
+    .upcoming{display:inline-flex;align-self:flex-start;align-items:center;min-height:44px;padding:10px 16px;border-radius:11px;background:#f2edfa;border:1px solid #e0d6ef;color:var(--purple);font-weight:750;font-size:.92rem}
+    .note{margin:35px 0 0;padding:19px 22px;background:var(--peach);border:1px solid #f1decf;border-radius:16px;color:#564a45}
+    footer{border-top:1px solid #e8e1ee;background:#fffdfef2;padding:25px 0;color:#617085;font-size:.88rem}
+    .footerrow{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px 24px}
+    .credit{font-size:.78rem}
+    @media(max-width:790px){.hero{grid-template-columns:1fr;padding:46px 0 48px}.art{min-height:230px}.art svg{max-width:330px}}
+    @media(max-width:560px){.wrap{width:min(100% - 28px,1100px)}nav{min-height:66px}.navlinks{gap:12px}.brand{font-size:.9rem}.hero{gap:21px}.art{min-height:195px}.art svg{max-width:265px}.cards{grid-template-columns:1fr}.card{min-height:230px;padding:21px}.sectionhead{align-items:flex-start;flex-direction:column}h1{font-size:clamp(2.4rem,11vw,3.25rem)}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
+  </style>
+</head>
+<body>
+  <header><nav class="wrap" aria-label="Main navigation"><div class="brand">PHYSICS <span>102</span> / LABS</div><div class="navlinks"><a href="#chapters">Chapters ↓</a><a href="labs.html">Chapter 23 ↗</a></div></nav></header>
+  <main class="wrap">
+    <section class="hero" aria-labelledby="page-title">
+      <div><div class="eyebrow">Learn physics by experimenting</div><h1 id="page-title">Physics 102<br><span>Interactive Laboratories</span></h1><p class="lead">Explore electricity through interactive diagrams, hands-on simulations, predictions, and worked solutions. Learn at your own pace on your phone or computer.</p><a class="btn" href="#chapters">Explore the chapters ↓</a></div>
+      <div class="art" aria-hidden="true"><svg viewBox="0 0 400 300"><defs><pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M30 0H0V30" fill="none" stroke="#8197b3" stroke-opacity=".18"/></pattern><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#4c909b"/></marker></defs><rect x="12" y="12" width="376" height="276" rx="17" fill="url(#grid)"/><g stroke="#4c909b" stroke-width="2.6" stroke-linecap="round" fill="none" marker-end="url(#arrow)"><path d="M239 150H352"/><path d="M226 175L306 255"/><path d="M200 188V274"/><path d="M174 175L94 255"/><path d="M161 150H48"/><path d="M174 125L94 45"/><path d="M200 112V26"/><path d="M226 125L306 45"/></g><circle cx="200" cy="150" r="34" fill="#dc796c" stroke="#ffcbbf" stroke-width="3"/><text x="200" y="164" text-anchor="middle" fill="white" font-size="43" font-weight="750">+</text><text x="326" y="278" fill="#586b80" font-size="13" text-anchor="end">Electric field</text></svg></div>
+    </section>
+    <section id="chapters" aria-labelledby="chapters-title"><div class="sectionhead"><div><div class="eyebrow">Course chapters</div><h2 id="chapters-title">Choose a chapter</h2><p class="subtitle">Start with Chapter 23. More interactive laboratories will be added as the course progresses.</p></div><span class="pill">1 chapter available</span></div>
+      <div class="cards">
+        <article class="card live"><div class="icon" aria-hidden="true">⚡</div><div class="status">Available now · 11 laboratories</div><h3>Chapter 23 — Electric Fields</h3><p>Investigate Coulomb’s law, electric forces, field vectors, charged rods and rings, field lines, and the motion of charged particles.</p><a class="btn" href="labs.html">Open Chapter 23 laboratories ↗</a></article>
+        <article class="card"><div class="icon" aria-hidden="true">◉</div><div class="status">Coming soon</div><h3>Chapter 24 — Gauss’ Law</h3><p>Explore electric flux, Gaussian surfaces, Gauss’ law for symmetric charge distributions, and conductors in electrostatic equilibrium.</p><span class="upcoming" aria-label="Chapter 24 laboratories coming soon">Laboratories coming soon</span></article>
+      </div>
+      <div class="note"><strong>For students:</strong> Chapter 23 is ready to explore. Chapter 24 laboratories are in development and will appear here when available. No account or installation is required for the current activities.</div>
+    </section>
+  </main>
+  <footer><div class="wrap footerrow"><span>Physics 102 · Interactive Laboratories</span><span class="credit">Developed by Dr. Najwa Al Bouzieh · Applied Science University</span></div></footer>
+</body></html>
