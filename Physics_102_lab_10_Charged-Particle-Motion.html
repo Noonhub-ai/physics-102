@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#faf9ff"><title>Physics 102 · Lab 10 — Motion of a Charged Particle</title>
+<style>
+:root{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#edf5ff;background:#0b182b}*{box-sizing:border-box}body{margin:0}main{max-width:920px;margin:auto;padding:16px 14px 55px}h1{font-size:clamp(1.5rem,5vw,2.15rem);margin:7px 0}h2{font-size:1.12rem;margin:0 0 10px}.muted,.hint{color:#b9cbe0}.muted{font-size:.9rem}.hint{font-size:.83rem;line-height:1.5}.card{border:1px solid #30435f;background:#13263f;border-radius:16px;padding:16px;margin-top:15px}.tag{color:#94cffb;font-size:.75rem;text-transform:uppercase;letter-spacing:.09em}.diagram{background:#f5f8ff;border-radius:12px;overflow:hidden}svg{display:block;width:100%;height:auto;touch-action:pan-y} .ctrls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.control{min-width:0}.control label{display:flex;justify-content:space-between;gap:8px;font-size:.9rem;font-weight:600}.control output{color:#aee9cd;font-variant-numeric:tabular-nums;white-space:nowrap}input[type=range]{width:100%;accent-color:#71c6ed;height:34px}select{background:#0b1b30;color:#fff;border:1px solid #58718d;border-radius:9px;padding:10px;width:100%;min-height:44px;font:inherit}button{background:#287bb9;color:white;border:1px solid #5b9dd2;border-radius:10px;padding:11px 14px;min-height:44px;font-size:.93rem;font-weight:650;cursor:pointer}button.secondary{background:#1b344f}button:disabled{opacity:.4;cursor:not-allowed}.buttons{display:flex;flex-wrap:wrap;gap:9px}.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.stat{background:#0e2036;border-radius:11px;padding:11px;min-width:0}.stat small{color:#a9c2da;display:block}.stat strong{display:block;font-size:1.04rem;margin-top:4px;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}.success{color:#88eac4}.warn{color:#ffcc8d}details{background:#0d2036;border-radius:10px;padding:12px;margin:8px 0;border:1px solid #314762}summary{cursor:pointer;font-weight:650;line-height:1.5}details p,details li{line-height:1.65;color:#d2e1ef}code{color:#28668d;white-space:normal} .math{overflow-wrap:anywhere;background:#0b182b;border-radius:7px;padding:9px 10px;margin:9px 0;color:#bfe9ff;font-family:ui-monospace,Consolas,monospace;font-size:.86rem}fieldset{border:0;margin:0;padding:0}legend{font-weight:650;margin-bottom:10px} .choice{display:block;padding:9px 4px;line-height:1.5}.choice input{margin-right:8px;accent-color:#70ccef}#feedback{margin-top:10px;line-height:1.6}.footer{margin-top:20px;color:#9eb4cd;font-size:.8rem;line-height:1.55}a{color:#9bd6ff}@media(max-width:590px){.ctrls{grid-template-columns:1fr}.card{padding:13px}.stats{grid-template-columns:1fr 1fr}.stat strong{font-size:.95rem}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+/* Shared Physics 102 pastel laboratory visual system */
+:root{color-scheme:light;color:#27364d;background:#faf9ff;--page:#faf9ff;--panel:#ffffff;--pale:#f3f0fc;--mint:#e9f6f0;--ink:#27364d;--muted:#5a687b;--border:#ddddea}
+body{background:radial-gradient(ellipse 90% 420px at 80% -150px,#e9e3fa 0%,transparent 75%),radial-gradient(ellipse 50% 420px at 0% 52%,#ecf7f2 0%,transparent 78%),var(--page);color:var(--ink)}
+main{max-width:1000px}
+h1,h2,legend,summary{color:#26354c}
+.muted,.hint{color:var(--muted)}
+.card{background:var(--panel);border:1px solid var(--border);box-shadow:0 6px 22px #73749a12}
+.card:nth-of-type(3n+2){background:#fefcff}
+.tag{color:#367c70;font-weight:800}
+.diagram{background:#f5f8ff;border:1px solid #d9e3ed}
+.control output,.success{color:#247d69}
+.warn{color:#9d603b}
+.stat{background:#f3f0fc;border:1px solid #e0dcf0}
+.stat small{color:#5f6e80}
+.stat strong{color:#283d58}
+input[type=range],.choice input{accent-color:#7279bf}
+select{background:#ffffff;color:#24354a;border:1px solid #bfc9d7}
+button{background:#597bb0;color:white;border:1px solid #5173ab;box-shadow:0 2px 8px #4e6f9d1a}
+button.secondary{background:#efeafb;color:#5e5190;border-color:#d4c8eb}
+button:hover{filter:brightness(1.04)}
+button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #aa90d2;outline-offset:2px}
+details{background:#f7f5fd;border:1px solid #e1ddee}
+details p,details li{color:#44566b}
+.math{background:#f0f4fa;color:#365a83}
+code{color:#28668d}
+.footer{margin-top:25px;padding-top:14px;border-top:1px solid #e0dfed;color:#667487;text-align:center;font-size:.76rem}
+a{color:#426f9f}
+@media(max-width:590px){main{padding:14px 11px 48px}.card{padding:14px}}
+/* Collection-wide polish */
+.lab-header{background:linear-gradient(120deg,#f0eafb 0%,#eaf7f1 74%,#fff0e8 100%);border:1px solid #e0dbee;border-radius:20px;padding:21px 23px;margin-bottom:16px;box-shadow:0 6px 24px #77709910}
+.lab-header h1{letter-spacing:-.02em}
+.lab-header .muted{margin-bottom:0;line-height:1.55}
+.diagram{border-radius:15px;overflow:hidden}
+.card{border-radius:18px}
+.stat:nth-child(even){background:#edf8f3;border-color:#dceee7}
+button{transition:background .15s ease}
+button:hover:not(:disabled){filter:none;background:#496ba2}
+button.secondary:hover:not(:disabled){background:#e3dcf7}
+#feedback:not(:empty){padding:12px;border-radius:10px;background:#edf8f2;border:1px solid #d4eadf}
+#feedback.warn{background:#fff3e9;border-color:#f0d8c4}
+.footer-course,.footer-author{display:block}
+.footer-course{font-weight:650;color:#53657f}
+.footer a{display:inline-block;margin-top:8px}
+@media(max-width:590px){.lab-header{padding:17px 15px}.buttons button{flex:1 1 135px}}
+@media(prefers-reduced-motion:reduce){button{transition:none}}
+
+</style></head><body><main>
+<header class="lab-header"><div class="tag">PHYSICS 102 · CHAPTER 23 · LABORATORY 10 · SECTION 23.7</div><h1>Motion of a Charged Particle</h1><p class="muted">Explore how a particle moves through a <b>uniform electric field</b> between parallel plates. Based on Example 13 (pp. 57–58) with a related connection to Example 12 (pp. 55–56).</p></header>
+<section class="card"><h2>Live particle trajectory</h2><div class="diagram"><svg id="scene" viewBox="0 0 720 366" role="img" aria-label="Electric field between horizontal parallel plates, showing charge motion and its trajectory">
+<defs><marker id="arrF" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#3978b6"/></marker><marker id="arrV" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#b17c2c"/></marker></defs>
+<rect width="720" height="366" fill="#f5f8ff"/>
+<g opacity=".15" stroke="#a8b8cb"> <path d="M0 50H720 M0 100H720 M0 150H720 M0 200H720 M0 250H720 M0 300H720 M0 350H720 M60 0V366 M120 0V366 M180 0V366 M240 0V366 M300 0V366 M360 0V366 M420 0V366 M480 0V366 M540 0V366 M600 0V366 M660 0V366"/></g>
+<rect x="125" y="66" width="470" height="15" rx="4" fill="#668fc4"/><rect x="125" y="287" width="470" height="15" rx="4" fill="#df8776"/>
+<g id="topsigns" fill="#ffffff" font-size="13" text-anchor="middle"></g><g id="bottomsigns" fill="#ffffff" font-size="13" text-anchor="middle"></g>
+<g id="fieldArrows" stroke="#3978b6" stroke-width="2" stroke-linecap="round" marker-end="url(#arrF)"></g>
+<path id="trace" d="" stroke="#278b78" stroke-width="3.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+<path id="tangent" stroke="#b17c2c" stroke-width="2.5" fill="none" marker-end="url(#arrV)"/>
+<circle id="particle" cx="125" cy="184" r="9" fill="#f5bd64" stroke="#8c5a23" stroke-width="1.8"/>
+<text x="126" y="334" fill="#465a72" font-size="15">Entry</text><text x="560" y="334" fill="#465a72" font-size="15">Exit plane</text><text id="fieldLabel" x="357" y="30" fill="#2c6697" font-size="15" text-anchor="middle">E field</text><text id="statusSVG" x="356" y="358" fill="#43576f" font-size="12" text-anchor="middle">Press Play to animate</text>
+</svg></div>
+<p id="zoomNote" class="hint" style="color:#8a612d;font-weight:650" aria-live="polite"></p><p class="hint">The <span class="success">green curve</span> is the particle's trajectory, the <span style="color:#b17c2c">yellow arrow</span> is its instantaneous velocity, and blue arrows show the electric field. Horizontal speed is constant while inside the field; vertical acceleration is constant. Horizontal position is mapped to the diagram; proton vertical deflection can be magnified when clearly labeled.</p>
+<div class="buttons"><button id="zoom" class="secondary" aria-pressed="false">Magnify proton path: On</button><button id="play">▶ Play</button><button id="pause" class="secondary">Pause</button><button id="reset" class="secondary">↺ Reset</button><button id="example" class="secondary">Load textbook Example 13</button></div>
+<p id="status" role="status" class="hint">Ready. Press Play to follow the particle.</p></section>
+<section class="card"><h2>Change the experiment</h2><div class="ctrls">
+<div class="control"><label for="particleType">Particle</label><select id="particleType"><option value="electron">Electron (−e)</option><option value="proton">Proton (+e)</option></select></div>
+<div class="control"><label for="fieldDirection">Electric field direction</label><select id="fieldDirection"><option value="up">Upward (↑)</option><option value="down">Downward (↓)</option></select></div>
+<div class="control"><label for="field">Field strength <output id="fieldOut">200 N/C</output></label><input id="field" type="range" min="50" max="500" step="10" value="200"></div>
+<div class="control"><label for="speed">Initial horizontal speed <output id="speedOut">3.00 × 10⁶ m/s</output></label><input id="speed" type="range" min="1" max="6" step="0.25" value="3"></div>
+<div class="control"><label for="length">Plate length <output id="lengthOut">0.100 m</output></label><input id="length" type="range" min="0.05" max="0.2" step="0.005" value="0.1"></div>
+</div><p class="hint">The plate separation is fixed at <b>0.080 m</b>. The particle enters halfway between the plates, initially moving horizontally. Gravity, edge effects, and magnetic forces are neglected.</p></section>
+<section class="card"><h2>Live calculations</h2><div class="stats"><div class="stat"><small>Vertical acceleration, a<sub>y</sub></small><strong id="accel"></strong></div><div class="stat"><small>Time to exit plane</small><strong id="time"></strong></div><div class="stat"><small>Vertical displacement at exit plane</small><strong id="deflect"></strong></div><div class="stat"><small>Vertical velocity at exit plane</small><strong id="velY"></strong></div><div class="stat"><small>Actual outcome</small><strong id="outcome"></strong></div><div class="stat"><small>Flight time in the field</small><strong id="flightTime"></strong></div></div>
+<p class="hint" id="notice">The calculated exit-plane values assume no plate impact. If a particle hits a plate first, the simulation stops at impact and reports it.</p></section>
+<section class="card"><h2>Detailed solution — Example 13</h2><p class="hint">The textbook example uses an electron with <b>vₓ = 3.00 × 10⁶ m/s</b>, <b>E = 200 N/C</b>, and <b>L = 0.100 m</b>. Its figure shows an <b>upward</b> electric field, so the electron accelerates <b>downward</b>. Open each step to see the derivation.</p>
+<details><summary>Step 1 — Identify forces and choose coordinates</summary><p>Let +x be right and +y be up. Inside a uniform electric field, the electric force is <b>F⃗ = q E⃗</b>. An electron has q = −1.602 × 10⁻¹⁹ C, so its electric force points opposite to E⃗. Neglect gravity.</p><div class="math">Fᵧ = q Eᵧ ;  m aᵧ = q Eᵧ ;  aₓ = 0</div></details>
+<details><summary>Step 2 — Calculate acceleration (part A)</summary><p>The electron mass is 9.109 × 10⁻³¹ kg. For an upward field, Eᵧ = +200 N/C.</p><div class="math">aᵧ = q Eᵧ / m<br>= [ (−1.602 × 10⁻¹⁹)(+200) ] / (9.109 × 10⁻³¹)<br>≈ −3.52 × 10¹³ m/s²</div><p>The negative sign means downward acceleration.</p></details>
+<details><summary>Step 3 — Find transit time (part B)</summary><p>There is no horizontal electric force, so <b>vₓ remains constant</b> while in the field. Divide the plate length by the horizontal speed:</p><div class="math">t = L/vₓ = 0.100/(3.00 × 10⁶)<br>= 3.33 × 10⁻⁸ s</div></details>
+<details><summary>Step 4 — Find vertical displacement (part C)</summary><p>The electron enters with <b>vᵧ,initial = 0</b>. Use the constant-acceleration equation:</p><div class="math">Δy = vᵧ,initial t + ½ aᵧ t²<br>= ½(−3.52 × 10¹³)(3.33 × 10⁻⁸)²<br>≈ −1.95 × 10⁻² m = −1.95 cm</div><p>The electron is 1.95 cm below its entry position at the exit plane, assuming the plates are far enough apart to avoid impact. The simulation uses an 8.0 cm gap, so the textbook default passes through without collision.</p></details>
+<details><summary>Step 5 — Predict the exit velocity and path</summary><p>Horizontal velocity remains +3.00 × 10⁶ m/s. Vertical velocity grows linearly with time:</p><div class="math">vᵧ = aᵧ t ≈ (−3.52 × 10¹³)(3.33 × 10⁻⁸) ≈ −1.17 × 10⁶ m/s</div><p>Combining horizontal uniform motion and vertical uniformly accelerated motion gives a <b>parabolic trajectory</b> inside the plates:</p><div class="math">y(x) = (qEᵧ / (2 m vₓ²)) x²</div><p>This extension follows from the chapter's constant-acceleration equations.</p></details>
+</section>
+<section class="card"><h2>Prediction challenge</h2><fieldset><legend>An electron enters horizontally. If the electric field is reversed but its magnitude remains the same, what changes?</legend><label class="choice"><input type="radio" name="quiz" value="a"> The electron bends in the same direction.</label><label class="choice"><input type="radio" name="quiz" value="b"> The electron bends in the opposite direction, with the same acceleration magnitude.</label><label class="choice"><input type="radio" name="quiz" value="c"> The electron travels in a straight line because it is negative.</label></fieldset><button id="check">Check prediction</button><div id="feedback" role="status" aria-live="polite"></div></section>
+<footer class="footer"><span class="footer-course">Physics 102 · Chapter 23 · Laboratory 10</span><span class="footer-author">Developed by Dr. Najwa Al Bouzieh · Applied Science University</span><a href="labs.html">← Back to laboratory collection</a><div>Idealized classical motion in a uniform electric field.</div></footer>
+</main>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id);const e=1.602176634e-19,me=9.1093837e-31,mp=1.6726219e-27,gap=.080;const X0=125,X1=595,CY=184,plateTop=81,plateBottom=287;let cfg,sim=null,frame=null,paused=false,lastTick=0;let magnifyProton=true,displayScale=1;
+const fmt=(v,n=3)=>{if(!Number.isFinite(v))return '—';if(v===0)return '0';let ex=Math.floor(Math.log10(Math.abs(v)));return `${(v/Math.pow(10,ex)).toFixed(n-1)} × 10${toSuper(ex)}`};
+const toSuper=n=>String(n).replace(/-/g,'⁻').replace(/\d/g,c=>'⁰¹²³⁴⁵⁶⁷⁸⁹'[+c]);
+const val=id=>$(id).value;
+function calculate(){let q=val('particleType')==='electron'?-e:e,m=q<0?me:mp,E=+val('field'),dir=val('fieldDirection')==='up'?1:-1,vx=+val('speed')*1e6,L=+val('length');let ay=q*dir*E/m,texit=L/vx,ye=.5*ay*texit**2,vye=ay*texit,thit=Math.sqrt(gap/Math.abs(ay)),impact=thit<texit-1e-15;return {q,m,E,dir,vx,L,ay,texit,ye,vye,thit,impact,tEnd:impact?thit:texit};}
+function displacement(t){return .5*cfg.ay*t*t}
+function point(t){let x=X0+(X1-X0)*(cfg.vx*t/cfg.L);let y=CY-displacement(t)*displayScale*(plateBottom-plateTop)/gap;return {x,y}}
+function path(tEnd){let s='';for(let i=0;i<=120;i++){let p=point(tEnd*i/120);s+=(i?'L':'M')+p.x.toFixed(2)+' '+p.y.toFixed(2)+' '}return s;}
+function render(t){let p=point(t),ey=cfg.ay*t; $('particle').setAttribute('cx',p.x);$('particle').setAttribute('cy',p.y);$('trace').setAttribute('d',path(t));let slope=ey/cfg.vx,dx=35,dy=-Math.max(-48,Math.min(48,slope*35*displayScale*(plateBottom-plateTop)/gap/( (X1-X0)/cfg.L)));$('tangent').setAttribute('d',`M${p.x} ${p.y}l${dx} ${dy}`);}
+function decorate(){let signsTop='',signsBottom='',arrows='';for(let j=0;j<9;j++){let x=151+j*52;signsTop+=`<text x="${x}" y="78">${cfg.dir===1?'−':'+'}</text>`;signsBottom+=`<text x="${x}" y="299">${cfg.dir===1?'+':'−'}</text>`}for(let j=0;j<7;j++){let x=165+j*64;arrows+=`<path d="M${x} ${cfg.dir===1?263:106}V${cfg.dir===1?116:253}"/>`}$('topsigns').innerHTML=signsTop;$('bottomsigns').innerHTML=signsBottom;$('fieldArrows').innerHTML=arrows;$('fieldLabel').textContent=`Electric field ${cfg.dir===1?'↑':'↓'} · ${cfg.E} N/C`}
+function update(){cancelAnimationFrame(frame);frame=null;sim=0;paused=false;cfg=calculate();displayScale=(cfg.q>0&&magnifyProton)?Math.min(1000,0.028/Math.max(1e-20,Math.abs(cfg.ye))):1;let z=displayScale>1.01; $('zoom').textContent='Magnify proton path: '+(magnifyProton?'On':'Off');$('zoom').setAttribute('aria-pressed',String(magnifyProton));$('zoomNote').textContent=z?`VISUAL MAGNIFICATION ×${displayScale.toFixed(0)}: proton vertical displacement is exaggerated for visibility. All numerical results and collision tests use the real motion.`:cfg.q>0?'TRUE-SCALE PATH: the proton deflection is tiny at these settings, so the line may look straight. Enable magnification to see its curvature.':'TRUE-SCALE PATH: the electron trajectory is drawn without vertical exaggeration.';$('fieldOut').textContent=`${cfg.E} N/C`;$('speedOut').textContent=`${(+val('speed')).toFixed(2)} × 10⁶ m/s`;$('lengthOut').textContent=`${cfg.L.toFixed(3)} m`;$('accel').textContent=(cfg.ay>=0?'+':'−')+fmt(Math.abs(cfg.ay))+' m/s²';$('time').textContent=fmt(cfg.texit)+' s';$('deflect').textContent=(cfg.ye>=0?'+':'−')+fmt(Math.abs(cfg.ye))+' m';$('velY').textContent=(cfg.vye>=0?'+':'−')+fmt(Math.abs(cfg.vye))+' m/s';$('outcome').textContent=cfg.impact?'Plate impact':'Exits field';$('outcome').className=cfg.impact?'warn':'success';$('flightTime').textContent=fmt(cfg.tEnd)+' s';$('notice').textContent=cfg.impact?'Warning: This particle reaches a plate before the exit plane. Exit-plane displacement and vertical velocity above are extrapolated values, not physically reached.':'The particle clears the plates. All exit-plane quantities are physically reached.';decorate();render(0);$('status').textContent='Ready. Press Play.';$('statusSVG').textContent='Press Play to animate';}
+function tick(time){if(sim===null||paused)return;if(!lastTick)lastTick=time;let delta=Math.min(90,time-lastTick);lastTick=time;sim+=cfg.tEnd*delta/3300;let t=Math.min(cfg.tEnd,sim);render(t);if(t>=cfg.tEnd){$('status').textContent=cfg.impact?'Particle hit a plate before the exit plane.':'Particle reached the exit plane.';$('statusSVG').textContent=cfg.impact?'Plate impact':'Reached exit plane';frame=null;return}frame=requestAnimationFrame(tick)}
+$('play').addEventListener('click',()=>{if(frame)return;if(sim===null||sim>=cfg.tEnd)sim=0;paused=false;lastTick=0;frame=requestAnimationFrame(tick);$('status').textContent='Animation running…';$('statusSVG').textContent='Motion in progress'});
+$('pause').addEventListener('click',()=>{paused=true;cancelAnimationFrame(frame);frame=null;$('status').textContent='Paused';$('statusSVG').textContent='Paused'});
+$('reset').addEventListener('click',update);$('zoom').addEventListener('click',()=>{magnifyProton=!magnifyProton;update();});
+$('example').addEventListener('click',()=>{$('particleType').value='electron';$('fieldDirection').value='up';$('field').value='200';$('speed').value='3';$('length').value='.100';update();});
+['particleType','fieldDirection','field','speed','length'].forEach(id=>$(id).addEventListener('input',update));
+$('check').addEventListener('click',()=>{let ans=document.querySelector('input[name="quiz"]:checked');$('feedback').textContent=!ans?'Choose an answer first.':ans.value==='b'?'Correct! The force F = qE and acceleration a = qE/m reverse direction when E reverses, but their magnitudes do not change.':'Not quite. Reversing E reverses the electric force and vertical acceleration; it does not change their magnitude.';$('feedback').className=ans&&ans.value==='b'?'success':'warn'});update();
+})();
+</script></body></html>
