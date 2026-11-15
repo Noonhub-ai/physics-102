@@ -35,25 +35,26 @@
 <section class="card scene-card"><div class="scene-head"><h2>Explore the Gaussian sphere</h2><span class="pill">Drag the radius handle</span></div><div class="scene"><canvas id="sphereCanvas" role="img" aria-label="Interactive three-dimensional-style projection of a uniformly charged solid sphere and concentric Gaussian spherical surface. Drag the radius handle to resize the Gaussian surface."></canvas><div class="hint">Drag the purple radius handle · Teal arrows show the radial field direction</div></div><div class="legend"><span><i class="dot" style="background:#e7a38a"></i>Charged insulating sphere</span><span><i class="dot" style="background:#8a74cc"></i>Gaussian surface (imaginary)</span><span><i class="dot" style="background:#298a86"></i>Electric field direction</span></div><div class="actions"><button id="insidePreset" type="button">Inside (r = 0.3 m)</button><button id="surfacePreset" type="button">At surface</button><button id="outsidePreset" type="button">Outside</button><button id="reset" class="primary" type="button">Reset</button></div><p class="small" id="regionText" aria-live="polite"></p></section>
 <section class="card graph-card"><div class="scene-head"><h2>Electric field versus distance</h2><span class="pill">Drag the point on the graph</span></div><div class="graph-shell"><canvas id="graphCanvas" role="img" aria-label="Interactive graph of signed radial electric field E versus radius r. The curve rises linearly inside the uniformly charged sphere and decays as inverse square outside. Drag horizontally to move the Gaussian radius."></canvas></div><p class="graph-note">The vertical axis shows the <strong>signed radial field</strong>: positive means outward, negative means inward. The dashed vertical line marks the physical sphere's surface, r = a. The dot tracks the Gaussian radius.</p></section>
 
-<section class="card worked-example" aria-label="Worked numerical example: electric field inside a uniformly charged insulating sphere">
-<h2>Worked example · Inside the sphere</h2>
+<section class="card worked-example" aria-label="Worked numerical example: electric field outside a uniformly charged insulating sphere">
+<h2>Worked example · Outside the sphere</h2>
 <div class="example-body">
 <div class="example-text">
-<p class="example-intro">A uniformly charged insulating sphere has <strong>a = 0.50 m</strong> and <strong>ρ = 53.1 µC/m³</strong>. Find the electric field magnitude at <strong>r = 0.30 m</strong>.</p>
+<p class="example-intro">A uniformly charged insulating sphere has <strong>a = 0.50 m</strong> and <strong>ρ = 53.1 µC/m³</strong>. Find the electric field magnitude at <strong>r = 0.80 m</strong>.</p>
 <div class="example-equations">
-<span class="eq-line"><strong>1.</strong> r &lt; a → E = k|Q|r/a³ = |ρ|r/(3ε₀)</span>
-<span class="eq-line"><strong>2.</strong> E = (53.1 × 10<sup>−6</sup> × 0.30) / (3 × 8.854 × 10<sup>−12</sup>)</span>
+<span class="eq-line"><strong>1.</strong> r &gt; a → E = k|Q|/r², where Q = ρ(4/3)πa³</span>
+<span class="eq-line"><strong>2.</strong> Q = (53.1 × 10<sup>−6</sup>)(4π/3)(0.50)³ = 2.78 × 10<sup>−5</sup> C</span>
+<span class="eq-line"><strong>3.</strong> E = (8.99 × 10<sup>9</sup>)(2.78 × 10<sup>−5</sup>)/(0.80)²</span>
 </div>
-<p class="example-result">E ≈ 6.00 × 10<sup>5</sup> N/C (outward)</p>
+<p class="example-result">E ≈ 3.90 × 10<sup>5</sup> N/C (outward)</p>
 </div>
-<svg class="example-figure" viewBox="0 0 120 128" role="img" aria-label="Cross-section of solid sphere, with point P at radius r inside outer radius a">
+<svg class="example-figure" viewBox="0 0 120 128" role="img" aria-label="Cross-section of charged sphere with point P outside the sphere at distance r greater than its radius a">
 <defs><radialGradient id="exampleSphereFill" cx="35%" cy="30%"><stop offset="0" stop-color="#f9e9dd"/><stop offset="1" stop-color="#e9b49d"/></radialGradient></defs>
-<circle cx="58" cy="65" r="49" fill="url(#exampleSphereFill)" stroke="#ba7c67" stroke-width="1.6"/>
-<circle cx="58" cy="65" r="3" fill="#26374e"/>
-<line x1="58" y1="65" x2="83" y2="40" stroke="#26374e" stroke-width="2"/>
-<circle cx="83" cy="40" r="4.5" fill="#7755b2" stroke="#fff" stroke-width="1.5"/>
-<line x1="58" y1="65" x2="92" y2="100" stroke="#38516e" stroke-width="1.8"/>
-<text x="65" y="47">r</text><text x="96" y="36">P</text><text x="77" y="91">a</text>
+<circle cx="49" cy="75" r="36" fill="url(#exampleSphereFill)" stroke="#ba7c67" stroke-width="1.6"/>
+<circle cx="49" cy="75" r="3" fill="#26374e"/>
+<line x1="49" y1="75" x2="109" y2="18" stroke="#26374e" stroke-width="2"/>
+<circle cx="109" cy="18" r="4.5" fill="#7755b2" stroke="#fff" stroke-width="1.5"/>
+<line x1="49" y1="75" x2="84" y2="84" stroke="#38516e" stroke-width="1.8"/>
+<text x="78" y="40">r</text><text x="100" y="10">P</text><text x="67" y="94">a</text>
 </svg>
 </div>
 </section>
