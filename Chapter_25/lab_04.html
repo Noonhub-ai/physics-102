@@ -6,7 +6,7 @@
 <header class="hero"><div class="eyebrow">Interactive Laboratory 04 · Electric Potential</div><h1>Proton & Electron Accelerator</h1><p class="lead">Two particles begin at rest and accelerate through the same potential difference. Observe how the charge sign determines the direction of acceleration, while particle mass determines the final speed.</p><div class="eq">ΔK = −qΔV &nbsp; · &nbsp; ½mv² = e|ΔV| &nbsp; · &nbsp; v = √(2e|ΔV|/m)</div></header>
 <main>
 <div class="layout"><section class="panel"><h2>1. Watch both particles accelerate</h2><div id="diagram" class="visual" aria-label="Two parallel animation lanes showing a proton moving with E and an electron against E"></div>
-<p class="hint">The electric field points right in both lanes. A proton starts on the left and accelerates right; an electron starts on the right and accelerates left. The animation uses a slowed-down, illustrative time scale and is not a real-time particle flight.</p>
+<p class="hint">The electric field points right in both lanes. A proton starts on the left and accelerates right; an electron starts on the right and accelerates left. The animation uses a slowed-down time scale. For an equal plate separation and voltage, the lighter electron reaches the opposite plate first; the animation illustrates the relative flight times, not their actual nanosecond timing.</p>
 <div class="actions"><button type="button" id="play">▶ Play both</button><button class="secondary" type="button" id="pause">Pause</button><button class="secondary" type="button" id="resetAnimation">Restart motion</button></div><p id="status" class="hint" aria-live="polite">Ready — both particles begin at rest.</p></section>
 <section class="panel"><h2>2. Adjust the accelerating voltage</h2>
 <label class="control"><span>Potential difference magnitude <output id="voltageOut">120 V</output></span><input id="voltage" type="range" min="10" max="1000" step="10" value="120"></label>
@@ -15,7 +15,7 @@
 <section class="panel"><h2>3. Compare the results</h2><div class="compare">
 <div class="mini"><h3>Proton (+e)</h3><div id="protonSpeed" class="value"></div><div class="meter"><div id="protonMeter"></div></div><div class="stat"><span>Mass</span><strong>1.673 × 10⁻²⁷ kg</strong></div><div class="stat"><span>ΔV along motion</span><strong id="protonDV"></strong></div><div class="stat"><span>Force / acceleration</span><strong>→ With E</strong></div></div>
 <div class="mini"><h3>Electron (−e)</h3><div id="electronSpeed" class="value"></div><div class="meter electron"><div id="electronMeter"></div></div><div class="stat"><span>Mass</span><strong>9.109 × 10⁻³¹ kg</strong></div><div class="stat"><span>ΔV along motion</span><strong id="electronDV"></strong></div><div class="stat"><span>Force / acceleration</span><strong>← Against E</strong></div></div></div>
-<div class="info"><strong>Key discovery:</strong> For the same accelerating voltage, both gain equal kinetic energy, but the electron's final speed is about <strong id="ratio"></strong> times the proton's. The mass—not the potential difference—is why the speeds differ.</div></section>
+<div class="info"><strong>Key discovery:</strong> For the same accelerating voltage, both gain equal kinetic energy, but the electron's final speed is about <strong id="ratio"></strong> times the proton's. At equal voltage, the mass difference is why the speeds differ. (The bars use the same speed scale.)</div></section>
 <div class="layout"><section class="panel"><h2>4. Make a prediction</h2><p>What happens to both final speeds if the accelerating voltage is increased from 100 V to 400 V?</p><div class="actions"><button type="button" data-guess="two">Both double</button><button type="button" data-guess="four">Both quadruple</button><button type="button" data-guess="same">No change</button></div><p class="feedback" id="predictFeedback" aria-live="polite"></p><p class="hint">Hint: speed is proportional to the square root of the accelerating voltage.</p></section>
 <section class="panel"><h2>5. Reveal the calculations</h2><button type="button" id="showMath">Show step-by-step solutions</button><div class="reveal" id="math" hidden><h3>Proton</h3><ol id="protonSteps"></ol><h3>Electron</h3><ol id="electronSteps"></ol><p class="hint">Nonrelativistic treatment. Within this 10–1000 V range, it gives an excellent approximation for both particles.</p></div></section></div>
 <section class="panel practice"><h2>6. Practice problems</h2><p id="question"></p><div class="actions"><input type="number" step="any" id="answer" aria-label="Final particle speed in meters per second" placeholder="Speed in m/s"><button type="button" id="check">Check answer</button><button class="secondary" type="button" id="next">Next question</button><button class="secondary" type="button" id="showAnswer">Show steps</button></div><p id="feedback" class="feedback" aria-live="polite"></p><div id="answerSteps" class="reveal" hidden></div></section>
@@ -26,12 +26,12 @@
 const $=id=>document.getElementById(id);
 const qe=1.602176634e-19, mp=1.67262192369e-27,me=9.1093837139e-31;
 const vnum=n=>Number(n.toPrecision(4)).toExponential(3);
-const voltage=$('voltage');let volts=Number(voltage.value),progress=0,playing=false,frame=null,last=null,task=0;
+const voltage=$('voltage');let volts=Number(voltage.value),progress=0,electronProgress=0,playing=false,frame=null,last=null,task=0;
 const speed=(v,m)=>Math.sqrt(2*qe*v/m);
 const problems=[{v:120,m:mp,type:'proton'},{v:120,m:me,type:'electron'},{v:300,m:mp,type:'proton'},{v:450,m:me,type:'electron'},{v:800,m:mp,type:'proton'}];
 const allText=(id,value)=>{$(id).textContent=value};
 function draw(){
-let xp=107+progress*395, xe=502-progress*395;
+let xp=107+progress*395, xe=502-electronProgress*395;
 let svg='<svg viewBox="0 0 610 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Proton accelerates right, electron accelerates left in a rightward uniform electric field">';
 svg+='<defs><linearGradient id="grad"><stop offset="0%" stop-color="#f6d3bc"/><stop offset="100%" stop-color="#d9eafa"/></linearGradient><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L7 4L0 8Z" fill="#6497ac"/></marker></defs>';
 [48,173].forEach((top,i)=>{svg+='<rect x="75" y="'+top+'" width="460" height="110" rx="12" fill="url(#grad)" stroke="#e2e7f1"/><rect x="69" y="'+(top-4)+'" width="10" height="118" rx="3" fill="#dc866d"/><rect x="530" y="'+(top-4)+'" width="10" height="118" rx="3" fill="#6796b7"/>';
@@ -53,11 +53,11 @@ $('electronSteps').innerHTML='<li>Moving opposite the electric field: ΔV = +'+v
 draw();
 }
 function stop(){playing=false;last=null;if(frame!==null){cancelAnimationFrame(frame);frame=null;}}
-function tick(t){if(!playing)return;if(last!==null){let elapsed=(t-last)/3000;progress=Math.min(1,Math.sqrt(Math.min(1,progress*progress+elapsed)));}last=t;draw();allText('status','Illustrative acceleration — '+Math.round(progress*100)+'% of plate separation');if(progress>=1){stop();allText('status','Both particles have crossed the same potential difference.');return}frame=requestAnimationFrame(tick);}
-voltage.addEventListener('input',()=>{stop();progress=0;update();allText('status','Ready at '+voltage.value+' V.');});
-$('play').onclick=()=>{if(playing)return;if(progress>=1)progress=0;playing=true;last=null;frame=requestAnimationFrame(tick);};
+function tick(t){if(!playing)return;if(last!==null){const dt=(t-last)/1000;const scale=3;progress=Math.min(1,Math.sqrt(Math.min(1,progress*progress+dt/scale)));electronProgress=Math.min(1,Math.sqrt(Math.min(1,electronProgress*electronProgress+dt/scale*Math.sqrt(mp/me))));}last=t;draw();allText('status','Proton '+Math.round(progress*100)+'% · Electron '+Math.round(electronProgress*100)+'% across');if(progress>=1&&electronProgress>=1){stop();allText('status','Both particles have crossed the same potential difference.');return}frame=requestAnimationFrame(tick);}
+voltage.addEventListener('input',()=>{stop();progress=0;electronProgress=0;update();allText('status','Ready at '+voltage.value+' V.');});
+$('play').onclick=()=>{if(playing)return;if(progress>=1){progress=0;electronProgress=0;}playing=true;last=null;frame=requestAnimationFrame(tick);};
 $('pause').onclick=()=>{stop();allText('status','Paused at '+Math.round(progress*100)+'%.');};
-$('resetAnimation').onclick=()=>{stop();progress=0;draw();allText('status','Ready — both particles begin at rest.');};
+$('resetAnimation').onclick=()=>{stop();progress=0;electronProgress=0;draw();allText('status','Ready — both particles begin at rest.');};
 $('resetAll').onclick=()=>{stop();voltage.value=120;progress=0;update();$('math').hidden=true;$('showMath').textContent='Show step-by-step solutions';allText('status','Ready — both particles begin at rest.');};
 document.querySelectorAll('[data-guess]').forEach(b=>b.onclick=()=>{let ok=b.dataset.guess==='two';$('predictFeedback').textContent=ok?'✓ Correct. √(400/100) = 2.':'Not quite. Speed ∝ √|ΔV|, so √4 = 2.';$('predictFeedback').style.color=ok?'#287a77':'#b26453';});
 $('showMath').onclick=()=>{const hidden=!$('math').hidden;$('math').hidden=hidden;$('showMath').textContent=hidden?'Show step-by-step solutions':'Hide solutions';};
