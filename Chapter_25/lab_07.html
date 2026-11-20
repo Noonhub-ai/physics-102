@@ -80,7 +80,7 @@ document.querySelectorAll('[data-preset]').forEach(b=>b.onclick=()=>{let p=prese
 function workSteps(){let ui=U(s.ri),uf=U(s.rf),d=uf-ui;$('workSteps').innerHTML='<strong>Step 1:</strong> Uᵢ = kq₁q₂/rᵢ = '+fmt(ui)+' nJ.<p><strong>Step 2:</strong> U𝒇 = kq₁q₂/r𝒇 = '+fmt(uf)+' nJ.</p><p><strong>Step 3:</strong> ΔU = U𝒇 − Uᵢ = '+fmt(d)+' nJ.</p><p><strong>Step 4:</strong> Wfield = −ΔU = '+fmt(-d)+' nJ; Wexternal = ΔU = '+fmt(d)+' nJ (slow move).</p>';}
 $('showWork').onclick=()=>{let el=$('workSteps');el.hidden=!el.hidden;if(!el.hidden)workSteps();};
 $('workExample').onclick=()=>{Object.assign(s,{q1:5,q2:-3,ri:.8,rf:.3});sync();$('workSteps').hidden=false;workSteps();};
-let task=0;const examples=[{q1:5,q2:-3,r:.4,what:'U'},{q1:4,q2:6,r:.3,what:'U'},{q1:-8,q2:-2,r:.8,what:'U'},{q1:2,q2:-5,ri:.2,rf:.5,what:'ΔU'},{q1:6,q2:3,ri:.8,rf:.4,what:'Wfield'}];
+const examples=[{q1:5,q2:-3,r:.4,what:'U'},{q1:4,q2:6,r:.3,what:'U'},{q1:-8,q2:-2,r:.8,what:'U'},{q1:2,q2:-5,ri:.2,rf:.5,what:'ΔU'},{q1:6,q2:3,ri:.8,rf:.4,what:'Wfield'}];
 const exerciseValue=(p,r)=>K*p.q1*p.q2*1e-9/r;
 function correct(p){if(p.what==='U')return exerciseValue(p,p.r);let delta=exerciseValue(p,p.rf)-exerciseValue(p,p.ri);return p.what==='ΔU'?delta:-delta;}
 function question(){let p=examples[task];$('question').textContent='Question '+(task+1)+': q₁ = '+p.q1+' nC, q₂ = '+p.q2+' nC. '+(p.what==='U'?'At r = '+p.r+' m, find U in nJ.':'Move from rᵢ = '+p.ri+' m to r𝒇 = '+p.rf+' m; calculate '+(p.what==='ΔU'?'ΔU':'work done by the field')+' in nJ.');$('answer').value='';$('answerMsg').textContent='';$('answerSteps').hidden=true;}
