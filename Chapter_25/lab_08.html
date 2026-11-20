@@ -5,7 +5,7 @@
 <main><div class="layout"><section class="panel"><h2>1. Explore the electric-potential graph</h2><div class="graph" id="potentialGraph"></div><p class="hint">Drag the purple position marker horizontally, or use the position slider. Choose a region to highlight its slope triangle. The graph follows the three-segment pattern used in Chapter 25 Problem 36.</p><div class="actions chips"><button type="button" data-region="a">Region A: Rising</button><button type="button" data-region="b">Region B: Flat</button><button type="button" data-region="c">Region C: Falling</button><button type="button" data-region="corner">Test a corner</button></div><p id="regionNote" class="result" aria-live="polite"></p></section>
 <section class="panel"><h2>2. Experiment controls</h2><label class="control"><span>Plateau potential H <output id="heightOut"></output></span><input type="range" id="height" min="5" max="50" step="5" value="20"></label>
 <label class="control"><span>Position x <output id="xOut"></output></span><input type="range" id="x" min="0" max="4" step=".1" value=".5"></label>
-<div class="actions"><button type="button" id="toggleTriangle">Show slope triangle</button><button class="secondary" type="button" id="reset">Reset</button></div>
+<div class="actions"><button type="button" id="toggleTriangle">Hide slope triangle</button><button class="secondary" type="button" id="reset">Reset</button></div>
 <p class="hint">The potential rises from 0 to H over 0–1 cm, is constant from 1–3 cm, and falls to 0 over 3–4 cm. Corners are included in the x slider.</p></section></div>
 <div class="layout"><section class="panel"><h2>3. Electric-field graph Eₓ(x)</h2><div class="graph" id="fieldGraph"></div><p class="hint">The three horizontal pieces show the field within each interval. Hollow circles mark the two corner positions, where the idealized graph has no single derivative. The purple marker tracks the selected position.</p></section>
 <section class="panel"><h2>4. Live result</h2><div id="live" class="big" aria-live="polite"></div><div id="values"></div><div id="explanation" class="info"></div><button type="button" id="reveal">Reveal calculations</button><div class="reveal" id="working" hidden><div id="mathSteps"></div></div></section></div>
@@ -16,7 +16,7 @@
 <script>
 (function(){
 'use strict';
-const $=id=>document.getElementById(id),s={height:20,x:.5},initial={...s};let triangle=true,visible=false,task=0;
+const $=id=>document.getElementById(id),s={height:20,x:.5},initial={...s};let triangle=true,task=0;
 const fmt=n=>Math.abs(n)<1e-8?'0':String(Number(n.toFixed(2)));
 const xx=n=>65+121*n,yp=v=>252-v/s.height*174;
 const region=x=>Math.abs(x-1)<1e-8||Math.abs(x-3)<1e-8?'corner':x<1?'a':x<3?'b':'c';
@@ -73,7 +73,7 @@ $('toggleTriangle').onclick=()=>{triangle=!triangle;$('toggleTriangle').textCont
 document.querySelectorAll('[data-region]').forEach(b=>b.onclick=()=>{s.x=({a:.5,b:2,c:3.5,corner:1})[b.dataset.region];update();});
 $('reveal').onclick=()=>{$('working').hidden=!$('working').hidden;$('reveal').textContent=$('working').hidden?'Reveal calculations':'Hide calculations';update();};
 document.querySelectorAll('[data-pred]').forEach(b=>b.onclick=()=>{let ok=b.dataset.pred==='minus';$('predictMsg').textContent=ok?'✓ Correct! Eₓ is the negative of the slope, so it points toward −x.':'Try again: Eₓ = −dV/dx. The minus sign reverses the sign of the slope.';$('predictMsg').style.color=ok?'#287a77':'#af6552';});
-const problems=[{H:15,x:.4},{H:30,x:2},{H:25,x:3.6},{H:10,x:1},{H:40,x:.8},{H:35,x:3.2}];let task=0;
+const problems=[{H:15,x:.4},{H:30,x:2},{H:25,x:3.6},{H:10,x:1},{H:40,x:.8},{H:35,x:3.2}];
 function question(){const p=problems[task];$('question').textContent='Question '+(task+1)+': The graph rises from 0 V at x = 0 cm to '+p.H+' V at x = 1 cm, stays flat to 3 cm, then falls to 0 V at 4 cm. What is Eₓ at x = '+p.x+' cm?'+(p.x===1?' (At a sharp corner, explain whether the derivative exists.)':'');$('answer').value='';$('answerMsg').textContent='';$('answerSteps').hidden=true;$('answer').disabled=p.x===1;$('check').disabled=p.x===1;if(p.x===1)$('answerMsg').textContent='Conceptual question: click Show steps to see why no numerical Eₓ is defined.';}
 $('next').onclick=()=>{task=(task+1)%problems.length;question();};
 $('check').onclick=()=>{let p=problems[task],correct=p.x<1?-100*p.H:p.x<3?0:100*p.H,raw=$('answer').value;if(!raw.trim()||!Number.isFinite(Number(raw))){$('answerMsg').textContent='Enter a numerical answer first.';return}let good=Math.abs(Number(raw)-correct)<=Math.max(.02,Math.abs(correct)*.02);$('answerMsg').textContent=good?'✓ Correct!':'Try again: identify the segment slope and reverse its sign. Multiply V/cm by 100.';$('answerMsg').style.color=good?'#287a77':'#af6552';};
