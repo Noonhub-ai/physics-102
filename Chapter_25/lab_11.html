@@ -14,13 +14,13 @@
 'use strict';
 const $=id=>document.getElementById(id),K=8.9875517923e9,s={Q:20,R:.5,r:.3},initial={...s},ids=['Q','R','r'];
 const fmt=n=>Math.abs(n)<1e-9?'0':String(Number(n.toFixed(Math.abs(n)<1?4:2)));
-const clamp=(n,l,h)=>Math.max(l,Math.min(h,n)),px=r=>115+215*r;
+const clamp=(n,l,h)=>Math.max(l,Math.min(h,n)),px=r=>250+145*r;
 let shown=false,idx=0;
 const samples=[{Q:20,R:.5,r:.2,what:'V'},{Q:-10,R:.4,r:.9,what:'V'},{Q:12,R:.3,r:0,what:'E'},{Q:30,R:.6,r:1.2,what:'E'},{Q:-16,R:.8,r:.8,what:'V'},{Q:8,R:.4,r:.7,what:'V'}];
 function calc(Q=s.Q,R=s.R,r=s.r){const V=K*Q*1e-9/Math.max(R,r),at=Math.abs(r-R)<1e-9;
-return{V,E:at?null:r<R?0:K*Q*1e-9/r**2,surfaceE:K*Q*1e-9/R**2,at,inside:r<R,region:at?'At the surface':r<R?'Inside metal':'Outside sphere'};}
+return{V,E:at&&Q!==0?null:r<R?0:K*Q*1e-9/(r||R)**2,surfaceE:K*Q*1e-9/R**2,at,inside:r<R,region:at?'At the surface':r<R?'Inside metal':'Outside sphere'};}
 function draw(){
-const z=calc(),cx=115,cy=160,radius=s.R*215,x=px(s.r),positive=s.Q>0;
+const z=calc(),cx=250,cy=160,radius=s.R*145,x=px(s.r),positive=s.Q>0;
 let h='<svg viewBox="0 0 610 333" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cross-section of conducting sphere; draggable point P tracks its distance from the center">';
 h+='<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L7 4L0 8Z" fill="#6199af"/></marker></defs><rect width="610" height="333" fill="#f8fbfe"/>';
 h+='<circle cx="'+cx+'" cy="'+cy+'" r="'+radius+'" fill="#deecf5" stroke="#719bb8" stroke-width="4"/>';
@@ -57,13 +57,13 @@ for(let id of ids){$(id).value=s[id];$(id+'out').textContent=fmt(s[id])+(id==='Q
 const z=calc(),srf=calc(s.Q,s.R,s.R);
 $('potential').innerHTML=fmt(z.V)+' <small>V</small>';
 $('readings').innerHTML=stat('Region',z.region)+stat('Potential V(r)',fmt(z.V)+' V')+stat('Radial field Eᵣ(r)',z.E===null?'One-sided limits':fmt(z.E)+' V/m')+stat('Field just inside E(R⁻)','0 V/m')+stat('Field just outside E(R⁺)',fmt(z.surfaceE)+' V/m')+stat('Surface potential V(R)',fmt(srf.V)+' V');
-$('meaning').textContent=z.at?'At the surface, potential stays continuous. The idealized field has distinct inside and outside limits, so the field is not assigned one value at the exact mathematical surface.':z.inside?'Inside the metal in electrostatic equilibrium, E = 0. The potential is constant everywhere inside, equal to its value on the surface.':s.Q>0?'Outside a positively charged sphere, the field points outward and V falls toward zero with increasing r.':s.Q<0?'Outside a negatively charged sphere, the field points inward and V rises toward zero (from negative values) as r increases.':'With Q = 0, both potential and field vanish.';
+$('meaning').textContent=z.at?'At the surface, potential stays continuous. For nonzero Q, the idealized field has distinct inside and outside limits, so it is not assigned one value at the exact mathematical surface.':z.inside?'Inside the metal in electrostatic equilibrium, E = 0. The potential is constant everywhere inside, equal to its value on the surface.':s.Q>0?'Outside a positively charged sphere, the field points outward and V falls toward zero with increasing r.':s.Q<0?'Outside a negatively charged sphere, the field points inward and V rises toward zero (from negative values) as r increases.':'With Q = 0, both potential and field vanish.';
 if(shown){let basis=z.inside?'For r < R, V = kQ/R and E = 0.':z.at?'At r = R, V = kQ/R; E(R⁻) = 0 and E(R⁺) = kQ/R².':'For r > R, V = kQ/r and Eᵣ = kQ/r².';$('stepsMath').innerHTML='<li>Use the reference V(∞) = 0 and the conducting sphere model.</li><li>'+basis+'</li><li>V = (8.99 × 10⁹)('+fmt(s.Q)+' × 10⁻⁹)/'+fmt(Math.max(s.R,s.r))+' = '+fmt(z.V)+' V.</li><li>'+(z.at?'The field at the idealized surface is described by two one-sided limits.':'Eᵣ = '+fmt(z.E)+' V/m. A negative radial field points inward.')+'</li>';}
 draw();plot('vGraph','V');plot('eGraph','E');
 }
 const visual=$('diagram');let dragging=false;
 visual.addEventListener('pointerdown',e=>{if(!e.target.closest('[data-drag="P"]'))return;dragging=true;visual.setPointerCapture(e.pointerId);e.preventDefault();});
-visual.addEventListener('pointermove',e=>{if(!dragging)return;const bounds=visual.getBoundingClientRect(),p=(e.clientX-bounds.left)/bounds.width*610;s.r=clamp(Math.round(((p-115)/215)*20)/20,0,2);const v=visual.querySelector('svg'),x=px(s.r);v.querySelector('[data-drag]').setAttribute('cx',x);v.querySelector('#point').setAttribute('cx',x);v.querySelector('#pointText').setAttribute('x',x);updateReadoutsWithoutDrawing();});
+visual.addEventListener('pointermove',e=>{if(!dragging)return;const bounds=visual.getBoundingClientRect(),p=(e.clientX-bounds.left)/bounds.width*610;s.r=clamp(Math.round(((p-250)/145)*20)/20,0,2);const v=visual.querySelector('svg'),x=px(s.r);v.querySelector('[data-drag]').setAttribute('cx',x);v.querySelector('#point').setAttribute('cx',x);v.querySelector('#pointText').setAttribute('x',x);updateReadoutsWithoutDrawing();});
 function updateReadoutsWithoutDrawing(){updateExceptDiagram();}
 function updateExceptDiagram(){for(let id of ids){$(id).value=s[id];$(id+'out').textContent=fmt(s[id])+(id==='Q'?' nC':' m');}const z=calc();$('potential').innerHTML=fmt(z.V)+' <small>V</small>';$('readings').innerHTML=stat('Region',z.region)+stat('Potential V(r)',fmt(z.V)+' V')+stat('Radial field Eᵣ(r)',z.E===null?'One-sided limits':fmt(z.E)+' V/m')+stat('Field just inside E(R⁻)','0 V/m')+stat('Field just outside E(R⁺)',fmt(z.surfaceE)+' V/m')+stat('Surface potential V(R)',fmt(K*s.Q*1e-9/s.R)+' V');$('meaning').textContent=z.at?'At the surface the field has distinct one-sided limits.':z.inside?'Inside the conductor, E = 0 and V is constant.':'Outside the conductor, the field follows the inverse-square law.';if(shown){let was=shown;shown=false;shown=was;$('stepsMath').innerHTML='<li>V = kQ/max(r,R) = '+fmt(z.V)+' V.</li><li>Field: '+(z.E===null?'one-sided limits at the surface':fmt(z.E)+' V/m')+'.</li>';}plot('vGraph','V');plot('eGraph','E');}
 visual.addEventListener('pointerup',()=>{dragging=false;update();});visual.addEventListener('pointercancel',()=>{dragging=false;update();});
